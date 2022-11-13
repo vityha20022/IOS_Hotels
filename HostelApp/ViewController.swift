@@ -27,13 +27,14 @@ class ViewController: UIViewController {
         networkManager.downloadHotelDescriptions { [weak self] result in
             DispatchQueue.main.async {
                 self?.loadingSpinner.stopAnimating()
-                
-                sender.isHidden = false
-                
-                
+
                 switch result {
-                    case .success(let hotelDescriptions): break
-                    case .failure(let error):
+                    case .success(let hotelDescriptions):
+                        let hotelsVC = self?.storyboard?.instantiateViewController(withIdentifier: "HotelsTableViewController") as! HotelsTableViewController
+                        hotelsVC.hotelDescriptions = hotelDescriptions
+                        self?.navigationController?.pushViewController(hotelsVC, animated: true)
+                    case .failure(_):
+                        sender.isHidden = false
                         self?.errorLabel.isHidden = false
                         self?.tipLabel.isHidden = false
                 }
