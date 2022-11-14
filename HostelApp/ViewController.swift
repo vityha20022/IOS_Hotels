@@ -20,6 +20,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        // restore state after back segue
+        self.navigationController?.navigationBar.isHidden = true
+        showHotelsButton.isHidden = false
+        errorLabel.isHidden = true
+        tipLabel.isHidden = true
+    }
+    
     @IBAction func showHotels(_ sender: UIButton) {
         sender.isHidden = true
         loadingSpinner.startAnimating()
@@ -30,7 +38,7 @@ class ViewController: UIViewController {
 
                 switch result {
                     case .success(let hotelDescriptions):
-                        let hotelsVC = self?.storyboard?.instantiateViewController(withIdentifier: "HotelsTableViewController") as! HotelsTableViewController
+                        let hotelsVC = self?.storyboard?.instantiateViewController(withIdentifier: "HotelsViewController") as! HotelsViewController
                         hotelsVC.hotelDescriptions = hotelDescriptions
                         self?.navigationController?.pushViewController(hotelsVC, animated: true)
                     case .failure(_):

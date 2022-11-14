@@ -1,20 +1,28 @@
 //
-//  HostelsTableViewController.swift
+//  HotelViewController.swift
 //  HostelApp
 //
-//  Created by Виктор Борисовский on 13.11.2022.
+//  Created by Виктор Борисовский on 14.11.2022.
 //
 
 import UIKit
 
-class HotelsTableViewController: UITableViewController {
-    var hotelDescriptions: [HotelDescription]!
+class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var sortingControl: UISegmentedControl!
+    
     let networkManager = NetworkManager()
-
+    var hotelDescriptions: [HotelDescription]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavigation()
+        //setupSortingControl()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+
     }
     
     func setupNavigation() {
@@ -24,6 +32,12 @@ class HotelsTableViewController: UITableViewController {
         self.navigationItem.hidesBackButton = true;
         self.navigationController?.navigationItem.backBarButtonItem?.isEnabled = false;
         self.navigationController!.interactivePopGestureRecognizer!.isEnabled = false;*/
+    }
+    
+    func setupSortingControl() {
+        sortingControl.setTitle("No sort", forSegmentAt: 0)
+        sortingControl.setTitle("By distance", forSegmentAt: 0)
+        sortingControl.setTitle("By rooms", forSegmentAt: 0)
     }
     
     func getNumberAvailableRoomsFor(hotel: HotelDescription) -> Int {
@@ -41,17 +55,17 @@ class HotelsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return hotelDescriptions.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let hotelDescription = hotelDescriptions[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "hotelCell", for: indexPath) as! HotelTableViewCell
@@ -68,7 +82,6 @@ class HotelsTableViewController: UITableViewController {
             DispatchQueue.main.async {
                 switch result {
                     case.success(let info):
-
                         self?.setImageForCellByInfo(cell: cell, info: info)
                     case.failure(_):
                         print("fail") // TODO
@@ -118,5 +131,7 @@ class HotelsTableViewController: UITableViewController {
         cell.imageLoadingSpinner.stopAnimating()
         cell.hotelImage.image = image
     }
+
+        
 
 }
