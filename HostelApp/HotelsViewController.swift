@@ -35,6 +35,8 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func setupNavigation() {
+        self.navigationController?.navigationBar.barTintColor = .white
+        self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "Hotels"
     }
