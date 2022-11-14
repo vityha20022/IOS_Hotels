@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         sender.isHidden = true
         loadingSpinner.startAnimating()
         
-        networkManager.downloadHotelDescriptions { [weak self] result in
+        networkManager.obtainHotelDescriptions { [weak self] result in
             DispatchQueue.main.async {
                 self?.loadingSpinner.stopAnimating()
 

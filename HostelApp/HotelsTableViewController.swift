@@ -9,6 +9,7 @@ import UIKit
 
 class HotelsTableViewController: UITableViewController {
     var hotelDescriptions: [HotelDescription]!
+    let networkManager = NetworkManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,14 @@ class HotelsTableViewController: UITableViewController {
         let suitesAvailability = hotel.suitesAvailability
         return suitesAvailability.split(separator: ":").count
     }
+    
+    func croppedImageBordersFor(image: UIImage, pixelsToCrop offset: Double) -> UIImage {
+        let cropRect = CGRect(x: offset, y: offset, width: image.size.width - offset - 2 * offset, height: image.size.height - 2 * offset)
+        let sourceCGImage = image.cgImage!
+        let croppedCGImage = sourceCGImage.cropping(to: cropRect)!
+        let croppedImage = UIImage(cgImage: croppedCGImage, scale: image.imageRendererFormat.scale, orientation: image.imageOrientation)
+        return croppedImage
+    }
 
     // MARK: - Table view data source
 
@@ -44,19 +53,73 @@ class HotelsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let hotel = hotelDescriptions[indexPath.row]
+        let hotelDescription = hotelDescriptions[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "hotelCell", for: indexPath) as! HotelTableViewCell
         
-        cell.hotelNameLabel.text = hotel.name
-        cell.hotelStarsLabel.text = String(hotel.stars)
-        cell.hotelAddressLabel.text = hotel.address
-        cell.hotelDistanceToCityCenterLabel.text = "\(hotel.distance) meters to city center"
-        cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(hotel: hotel)) available rooms now"
+        cell.imageLoadingSpinner.startAnimating()
+        
+        cell.hotelNameLabel.text = hotelDescription.name
+        cell.hotelStarsLabel.text = String(hotelDescription.stars)
+        cell.hotelAddressLabel.text = hotelDescription.address
+        cell.hotelDistanceToCityCenterLabel.text = "\(hotelDescription.distance) meters to city center"
+        cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(hotel: hotelDescription)) available rooms now"
+        
+        networkManager.obtainHotelInfoForDescriptionId(id: String(hotelDescription.id)) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                    case.success(let info):
+
+                        self?.setImageForCellByInfo(cell: cell, info: info)
+                    case.failure(_):
+                        print("fail") // TODO
+                }
+            }
+        }
+        
         
         
         return cell
             
+    }
+    
+    func setImageForCellByInfo(cell: HotelTableViewCell, info: HotelInfo?) {
+        guard let info = info else {
+            setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+            return
+        }
+        
+        guard let imagePath = info.image else {
+            setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+            return
+        }
+        
+        let parsedImagePath = imagePath.split(separator: ".")
+        
+        guard parsedImagePath.count != 0 else {
+            setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+            return
+        }
+        
+        let imageId = String(parsedImagePath[0])
+        
+        networkManager.obtainHotelImageForImageId(id: imageId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                    case.success(let image):
+                        let croppedImage = self?.croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
+                        self?.setImageForCell(cell: cell, image: croppedImage!)
+                    case.failure(_):
+                        self?.setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+                }
+            }
+        }
+        
+    }
+    
+    func setImageForCell(cell: HotelTableViewCell, image: UIImage) {
+        cell.imageLoadingSpinner.stopAnimating()
+        cell.hotelImage.image = image
     }
 
 }

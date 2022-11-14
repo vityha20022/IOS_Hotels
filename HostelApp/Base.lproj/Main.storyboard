@@ -239,6 +239,13 @@
                                                 <constraint firstItem="IHR-1F-W1Y" firstAttribute="leading" secondItem="kbn-5q-xWf" secondAttribute="leading" id="qnd-Fd-hlc"/>
                                             </constraints>
                                         </stackView>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="KMY-GE-N3V">
+                                            <rect key="frame" x="50" y="70" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="A8C-mw-HcW"/>
+                                                <constraint firstAttribute="width" constant="20" id="O8t-7N-Vxi"/>
+                                            </constraints>
+                                        </activityIndicatorView>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemMintColor"/>
                                     <constraints>
@@ -246,6 +253,8 @@
                                         <constraint firstItem="mKb-4D-RDp" firstAttribute="leading" secondItem="md3-Cd-wmP" secondAttribute="trailing" constant="10" id="882-nt-9Cc"/>
                                         <constraint firstItem="md3-Cd-wmP" firstAttribute="centerY" secondItem="y5w-e1-APE" secondAttribute="centerY" id="Kwh-km-wda"/>
                                         <constraint firstItem="mKb-4D-RDp" firstAttribute="centerY" secondItem="md3-Cd-wmP" secondAttribute="centerY" id="Ttq-DI-5gG"/>
+                                        <constraint firstItem="KMY-GE-N3V" firstAttribute="centerY" secondItem="md3-Cd-wmP" secondAttribute="centerY" id="cTo-eB-if1"/>
+                                        <constraint firstItem="KMY-GE-N3V" firstAttribute="centerX" secondItem="md3-Cd-wmP" secondAttribute="centerX" id="lyR-eC-vsy"/>
                                         <constraint firstItem="md3-Cd-wmP" firstAttribute="leading" secondItem="y5w-e1-APE" secondAttribute="leading" constant="10" id="sDw-WG-QeD"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -254,8 +263,10 @@
                                     <outlet property="hotelAddressLabel" destination="0nc-gK-B3F" id="u8K-XM-y38"/>
                                     <outlet property="hotelAvailableRoomsLabel" destination="GgN-SR-1dn" id="CT1-9l-d7k"/>
                                     <outlet property="hotelDistanceToCityCenterLabel" destination="GGP-5v-Llc" id="yKL-K9-os0"/>
+                                    <outlet property="hotelImage" destination="md3-Cd-wmP" id="dFj-4v-TaZ"/>
                                     <outlet property="hotelNameLabel" destination="8x4-78-H8m" id="Uin-3D-HFz"/>
                                     <outlet property="hotelStarsLabel" destination="FUg-Q0-CNe" id="Nkp-kZ-VWK"/>
+                                    <outlet property="imageLoadingSpinner" destination="KMY-GE-N3V" id="syW-JV-sph"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

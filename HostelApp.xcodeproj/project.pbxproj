@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		970EEFD629224E3800661CCF /* HotelInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970EEFD529224E3800661CCF /* HotelInfoModel.swift */; };
 		97EDB859291FEB68004951C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EDB858291FEB68004951C0 /* AppDelegate.swift */; };
 		97EDB85B291FEB68004951C0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EDB85A291FEB68004951C0 /* SceneDelegate.swift */; };
 		97EDB85D291FEB68004951C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EDB85C291FEB68004951C0 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		970EEFD529224E3800661CCF /* HotelInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelInfoModel.swift; sourceTree = "<group>"; };
 		97EDB855291FEB68004951C0 /* HostelApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HostelApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97EDB858291FEB68004951C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		97EDB85A291FEB68004951C0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +47,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		970EEFD429224DA100661CCF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				97EDB86C291FF9CB004951C0 /* HotelDescriptionModel.swift */,
+				970EEFD529224E3800661CCF /* HotelInfoModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		97EDB84C291FEB68004951C0 = {
 			isa = PBXGroup;
 			children = (
@@ -64,7 +75,7 @@
 		97EDB857291FEB68004951C0 /* HostelApp */ = {
 			isa = PBXGroup;
 			children = (
-				97EDB86C291FF9CB004951C0 /* HotelDescriptionModel.swift */,
+				970EEFD429224DA100661CCF /* Models */,
 				97EDB858291FEB68004951C0 /* AppDelegate.swift */,
 				97EDB85A291FEB68004951C0 /* SceneDelegate.swift */,
 				97EDB85C291FEB68004951C0 /* ViewController.swift */,
@@ -150,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				970EEFD629224E3800661CCF /* HotelInfoModel.swift in Sources */,
 				97EDB85D291FEB68004951C0 /* ViewController.swift in Sources */,
 				97EDB859291FEB68004951C0 /* AppDelegate.swift in Sources */,
 				97EDB87129215EFC004951C0 /* HotelsTableViewController.swift in Sources */,
