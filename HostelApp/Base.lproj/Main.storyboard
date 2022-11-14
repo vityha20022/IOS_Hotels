@@ -131,18 +131,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fCS-ep-oc7">
-                                <rect key="frame" x="0.0" y="59" width="393" height="32"/>
-                                <color key="backgroundColor" systemColor="systemMintColor"/>
-                                <segments>
-                                    <segment title="No sort"/>
-                                    <segment title="By distance"/>
-                                    <segment title="By rooms"/>
-                                </segments>
-                                <color key="selectedSegmentTintColor" systemColor="systemTealColor"/>
-                            </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="160" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Yua-6U-bG0">
-                                <rect key="frame" x="0.0" y="90" width="393" height="762"/>
+                                <rect key="frame" x="0.0" y="59" width="393" height="793"/>
                                 <color key="backgroundColor" systemColor="systemMintColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="hotelCell" rowHeight="160" id="urJ-nR-6IH" customClass="HotelTableViewCell" customModule="HostelApp" customModuleProvider="target">
@@ -292,17 +282,12 @@
                         <constraints>
                             <constraint firstItem="Yua-6U-bG0" firstAttribute="trailing" secondItem="Ugd-ww-PmC" secondAttribute="trailing" id="3Ca-Ew-UOS"/>
                             <constraint firstAttribute="bottom" secondItem="Yua-6U-bG0" secondAttribute="bottom" id="DDc-uJ-aPj"/>
-                            <constraint firstItem="Yua-6U-bG0" firstAttribute="top" secondItem="fCS-ep-oc7" secondAttribute="bottom" id="LDP-Zw-Axg"/>
-                            <constraint firstItem="Ugd-ww-PmC" firstAttribute="trailing" secondItem="fCS-ep-oc7" secondAttribute="trailing" id="Wru-Cm-LZQ"/>
-                            <constraint firstItem="fCS-ep-oc7" firstAttribute="top" secondItem="Ugd-ww-PmC" secondAttribute="top" id="ZRo-AE-Gb2"/>
-                            <constraint firstItem="fCS-ep-oc7" firstAttribute="leading" secondItem="Ugd-ww-PmC" secondAttribute="leading" id="aqH-AA-1qY"/>
+                            <constraint firstItem="Yua-6U-bG0" firstAttribute="top" secondItem="Ugd-ww-PmC" secondAttribute="top" id="Nz0-PR-X5L"/>
                             <constraint firstItem="Yua-6U-bG0" firstAttribute="leading" secondItem="Ugd-ww-PmC" secondAttribute="leading" id="kyF-gW-HAY"/>
-                            <constraint firstItem="fCS-ep-oc7" firstAttribute="trailing" secondItem="Yua-6U-bG0" secondAttribute="trailing" id="u1f-Jz-9Rt"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2U9-V9-iJ4"/>
                     <connections>
-                        <outlet property="sortingControl" destination="fCS-ep-oc7" id="fhQ-NK-4bn"/>
                         <outlet property="tableView" destination="Yua-6U-bG0" id="m9g-6D-XTz"/>
                     </connections>
                 </viewController>
@@ -317,9 +302,6 @@
         <image name="star.fill" catalog="system" width="128" height="116"/>
         <systemColor name="systemMintColor">
             <color red="0.0" green="0.7803921568627451" blue="0.74509803921568629" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

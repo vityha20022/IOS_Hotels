@@ -39,7 +39,8 @@ class ViewController: UIViewController {
                 switch result {
                     case .success(let hotelDescriptions):
                         let hotelsVC = self?.storyboard?.instantiateViewController(withIdentifier: "HotelsViewController") as! HotelsViewController
-                        hotelsVC.hotelDescriptions = hotelDescriptions
+                        hotelsVC.hotelDescriptionsWithSorting = hotelDescriptions
+                        hotelsVC.unsortedDescriptions = hotelDescriptions
                         self?.navigationController?.pushViewController(hotelsVC, animated: true)
                     case .failure(_):
                         sender.isHidden = false

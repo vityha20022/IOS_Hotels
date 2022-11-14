@@ -7,18 +7,27 @@
 
 import UIKit
 
+
 class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var sortingControl: UISegmentedControl!
     
     let networkManager = NetworkManager()
-    var hotelDescriptions: [HotelDescription]!
+    var hotelDescriptionsWithSorting: [HotelDescription]!
+    var unsortedDescriptions: [HotelDescription]!
+    var imageByHotelInfoId = [Int?: UIImage]()
+    var hotelInfoByDescriptionId = [Int: HotelInfo]()
+    
+    enum SortingType {
+        case NoSorting
+        case ByDistance
+        case ByRooms
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavigation()
-        //setupSortingControl()
+        setupSortingControl()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -28,16 +37,42 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func setupNavigation() {
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "Hotels"
-        /*self.navigationItem.leftBarButtonItem = nil;
-        self.navigationItem.hidesBackButton = true;
-        self.navigationController?.navigationItem.backBarButtonItem?.isEnabled = false;
-        self.navigationController!.interactivePopGestureRecognizer!.isEnabled = false;*/
     }
     
     func setupSortingControl() {
-        sortingControl.setTitle("No sort", forSegmentAt: 0)
-        sortingControl.setTitle("By distance", forSegmentAt: 0)
-        sortingControl.setTitle("By rooms", forSegmentAt: 0)
+        var menuItems: [UIAction] {
+            return [
+                UIAction(title: "No sorting", image: nil, handler: { [weak self] (_) in self?.sortModel(sortType: .NoSorting)
+                }),
+                UIAction(title: "By distance", image: nil, handler: { [weak self] (_) in self?.sortModel(sortType: .ByDistance)
+                }),
+                UIAction(title: "By rooms", image: nil, handler: { [weak self] (_) in self?.sortModel(sortType: .ByRooms)
+                })
+            ]
+        }
+
+        var demoMenu: UIMenu {
+            return UIMenu(title: "", image: nil, identifier: nil, options: [], children: menuItems)
+        }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Menu", image: UIImage(named: "sort"), primaryAction: nil, menu: demoMenu)
+    }
+    
+    func sortModel(sortType: SortingType) {
+        switch sortType {
+            case .NoSorting:
+                hotelDescriptionsWithSorting = unsortedDescriptions
+            case .ByDistance:
+                hotelDescriptionsWithSorting = unsortedDescriptions.sorted(by: { first, second in
+                    first.distance < second.distance
+                })
+            case .ByRooms:
+                hotelDescriptionsWithSorting = unsortedDescriptions.sorted(by: { first, second in
+                    getNumberAvailableRoomsFor(hotel: first) > getNumberAvailableRoomsFor(hotel: second)
+                })
+        }
+        
+        tableView.reloadData()
     }
     
     func getNumberAvailableRoomsFor(hotel: HotelDescription) -> Int {
@@ -62,52 +97,55 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return hotelDescriptions.count
+        return hotelDescriptionsWithSorting.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let hotelDescription = hotelDescriptions[indexPath.row]
+        let hotelDescription = hotelDescriptionsWithSorting[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "hotelCell", for: indexPath) as! HotelTableViewCell
         
-        cell.imageLoadingSpinner.startAnimating()
-        
+        // set text values
         cell.hotelNameLabel.text = hotelDescription.name
         cell.hotelStarsLabel.text = String(hotelDescription.stars)
         cell.hotelAddressLabel.text = hotelDescription.address
         cell.hotelDistanceToCityCenterLabel.text = "\(hotelDescription.distance) meters to city center"
         cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(hotel: hotelDescription)) available rooms now"
         
-        networkManager.obtainHotelInfoForDescriptionId(id: String(hotelDescription.id)) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                    case.success(let info):
-                        self?.setImageForCellByInfo(cell: cell, info: info)
-                    case.failure(_):
-                        print("fail") // TODO
+        // set image
+        guard let hotelInfo = hotelInfoByDescriptionId[hotelDescription.id] else {
+            cell.imageLoadingSpinner.startAnimating()
+            networkManager.obtainHotelInfoForDescriptionId(id: String(hotelDescription.id)) { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                        case.success(let info):
+                            self?.hotelInfoByDescriptionId[hotelDescription.id] = info
+                            self?.setImageForCellByInfo(cell: cell, info: info)
+                        case.failure(_):
+                            self?.setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: nil)
+                    }
                 }
             }
+            
+            return cell
         }
+        
+        let image = imageByHotelInfoId[hotelInfo.id]
+        cell.hotelImage.image = image
         
         return cell
-            
     }
     
-    func setImageForCellByInfo(cell: HotelTableViewCell, info: HotelInfo?) {
-        guard let info = info else {
-            setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
-            return
-        }
-        
+    func setImageForCellByInfo(cell: HotelTableViewCell, info: HotelInfo) {
         guard let imagePath = info.image else {
-            setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+            setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
             return
         }
         
         let parsedImagePath = imagePath.split(separator: ".")
         
         guard parsedImagePath.count != 0 else {
-            setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+            setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
             return
         }
         
@@ -118,16 +156,16 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 switch result {
                     case.success(let image):
                         let croppedImage = self?.croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
-                        self?.setImageForCell(cell: cell, image: croppedImage!)
+                        self?.setImageForCell(cell: cell, image: croppedImage!, hotelInfoId: info.id)
                     case.failure(_):
-                        self?.setImageForCell(cell: cell, image: UIImage(named: "noImage")!)
+                        self?.setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
                 }
             }
         }
-        
     }
     
-    func setImageForCell(cell: HotelTableViewCell, image: UIImage) {
+    func setImageForCell(cell: HotelTableViewCell, image: UIImage, hotelInfoId: Int?) {
+        imageByHotelInfoId[hotelInfoId] = image
         cell.imageLoadingSpinner.stopAnimating()
         cell.hotelImage.image = image
     }
