@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		970EEFD629224E3800661CCF /* HotelInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970EEFD529224E3800661CCF /* HotelInfoModel.swift */; };
 		970EEFD82922A9B000661CCF /* HotelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970EEFD72922A9B000661CCF /* HotelsViewController.swift */; };
+		970EEFDA2924094E00661CCF /* HotelPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970EEFD92924094E00661CCF /* HotelPageViewController.swift */; };
 		97EDB859291FEB68004951C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EDB858291FEB68004951C0 /* AppDelegate.swift */; };
 		97EDB85B291FEB68004951C0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EDB85A291FEB68004951C0 /* SceneDelegate.swift */; };
 		97EDB85D291FEB68004951C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EDB85C291FEB68004951C0 /* ViewController.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		970EEFD529224E3800661CCF /* HotelInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelInfoModel.swift; sourceTree = "<group>"; };
 		970EEFD72922A9B000661CCF /* HotelsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelsViewController.swift; sourceTree = "<group>"; };
+		970EEFD92924094E00661CCF /* HotelPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelPageViewController.swift; sourceTree = "<group>"; };
 		97EDB855291FEB68004951C0 /* HostelApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HostelApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97EDB858291FEB68004951C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		97EDB85A291FEB68004951C0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				97EDB86E292147B8004951C0 /* NetworkManager.swift */,
 				97EDB87229218690004951C0 /* HotelTableViewCell.swift */,
 				970EEFD72922A9B000661CCF /* HotelsViewController.swift */,
+				970EEFD92924094E00661CCF /* HotelPageViewController.swift */,
 			);
 			path = HostelApp;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 			files = (
 				970EEFD629224E3800661CCF /* HotelInfoModel.swift in Sources */,
 				970EEFD82922A9B000661CCF /* HotelsViewController.swift in Sources */,
+				970EEFDA2924094E00661CCF /* HotelPageViewController.swift in Sources */,
 				97EDB85D291FEB68004951C0 /* ViewController.swift in Sources */,
 				97EDB859291FEB68004951C0 /* AppDelegate.swift in Sources */,
 				97EDB87329218690004951C0 /* HotelTableViewCell.swift in Sources */,

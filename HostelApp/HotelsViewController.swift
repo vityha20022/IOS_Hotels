@@ -15,7 +15,7 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var hotelDescriptionsWithSorting: [HotelDescription]!
     var unsortedDescriptions: [HotelDescription]!
     var imageByHotelInfoId = [Int?: UIImage]()
-    var hotelInfoByDescriptionId = [Int: HotelInfo]()
+    var hotelInfoByHotelDescriptionId = [Int: HotelInfo]()
     
     enum SortingType {
         case NoSorting
@@ -31,13 +31,13 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.delegate = self
         tableView.dataSource = self
-
     }
     
     func setupNavigation() {
         self.navigationController?.navigationBar.barTintColor = .white
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         self.navigationItem.title = "Hotels"
     }
     
@@ -102,6 +102,24 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return hotelDescriptionsWithSorting.count
     }
     
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let hotelDescription = hotelDescriptionsWithSorting[indexPath.row]
+        
+        guard let hotelInfo = hotelInfoByHotelDescriptionId[hotelDescription.id] else {
+            return
+        }
+        
+        guard let hotelImage = imageByHotelInfoId[hotelInfo.id] else {
+            return
+        }
+        
+        let hotelPageVC = storyboard?.instantiateViewController(withIdentifier: "HotelPageViewController") as! HotelPageViewController
+        hotelPageVC.hotelImage = hotelImage
+        hotelPageVC.hotelInfo = hotelInfo
+        navigationController?.pushViewController(hotelPageVC, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let hotelDescription = hotelDescriptionsWithSorting[indexPath.row]
         
@@ -115,16 +133,16 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(hotel: hotelDescription)) available rooms now"
         
         // set image
-        guard let hotelInfo = hotelInfoByDescriptionId[hotelDescription.id] else {
+        guard let hotelInfo = hotelInfoByHotelDescriptionId[hotelDescription.id] else {
             cell.imageLoadingSpinner.startAnimating()
             networkManager.obtainHotelInfoForDescriptionId(id: String(hotelDescription.id)) { [weak self] result in
                 DispatchQueue.main.async {
                     switch result {
                         case.success(let info):
-                            self?.hotelInfoByDescriptionId[hotelDescription.id] = info
+                            self?.hotelInfoByHotelDescriptionId[hotelDescription.id] = info
                             self?.setImageForCellByInfo(cell: cell, info: info)
                         case.failure(_):
-                            self?.setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: nil)
+                            self?.setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: nil)
                     }
                 }
             }
@@ -140,14 +158,14 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func setImageForCellByInfo(cell: HotelTableViewCell, info: HotelInfo) {
         guard let imagePath = info.image else {
-            setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
+            setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
             return
         }
         
         let parsedImagePath = imagePath.split(separator: ".")
         
         guard parsedImagePath.count != 0 else {
-            setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
+            setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
             return
         }
         
@@ -158,15 +176,15 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 switch result {
                     case.success(let image):
                         let croppedImage = self?.croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
-                        self?.setImageForCell(cell: cell, image: croppedImage!, hotelInfoId: info.id)
+                        self?.setAndCacheImageForCell(cell: cell, image: croppedImage!, hotelInfoId: info.id)
                     case.failure(_):
-                        self?.setImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
+                        self?.setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
                 }
             }
         }
     }
     
-    func setImageForCell(cell: HotelTableViewCell, image: UIImage, hotelInfoId: Int?) {
+    func setAndCacheImageForCell(cell: HotelTableViewCell, image: UIImage, hotelInfoId: Int?) {
         imageByHotelInfoId[hotelInfoId] = image
         cell.imageLoadingSpinner.stopAnimating()
         cell.hotelImage.image = image
