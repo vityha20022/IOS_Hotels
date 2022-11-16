@@ -142,7 +142,7 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                             self?.hotelInfoByHotelDescriptionId[hotelDescription.id] = info
                             self?.setImageForCellByInfo(cell: cell, info: info)
                         case.failure(_):
-                            self?.setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: nil)
+                            self?.setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: nil)
                     }
                 }
             }
@@ -158,14 +158,14 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func setImageForCellByInfo(cell: HotelTableViewCell, info: HotelInfo) {
         guard let imagePath = info.image else {
-            setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
+            setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: info.id)
             return
         }
         
         let parsedImagePath = imagePath.split(separator: ".")
         
         guard parsedImagePath.count != 0 else {
-            setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
+            setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: info.id)
             return
         }
         
@@ -178,7 +178,7 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         let croppedImage = self?.croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
                         self?.setAndCacheImageForCell(cell: cell, image: croppedImage!, hotelInfoId: info.id)
                     case.failure(_):
-                        self?.setAndCacheImageForCell(cell: cell, image: UIImage(named: "noImage")!, hotelInfoId: info.id)
+                        self?.setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: info.id)
                 }
             }
         }

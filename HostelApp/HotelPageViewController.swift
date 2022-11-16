@@ -21,7 +21,12 @@ class HotelPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if hotelImage.isSymbolImage {
+            hotelImageOutlet.contentMode = .scaleAspectFit
+        }
+        
         hotelImageOutlet.image = hotelImage
+        
         hotelNameLabel.text = hotelInfo.name
         hotelStarsLabel.text = String(hotelInfo.stars)
         hotelAddressLabel.text = hotelInfo.address
