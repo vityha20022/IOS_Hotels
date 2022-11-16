@@ -7,12 +7,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class StartScreenViewController: UIViewController {
     @IBOutlet weak var showHotelsButton: UIButton!
     @IBOutlet weak var loadingSpinner: UIActivityIndicatorView!
-    
+
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var errorLabel: UILabel!
+    
     var hotelDescriptions = [HotelDescription]()
     let networkManager = NetworkManager()
     
@@ -22,6 +23,8 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         // restore state after back segue
+        super.viewWillAppear(animated)
+        
         self.navigationController?.navigationBar.isHidden = true
         showHotelsButton.isHidden = false
         errorLabel.isHidden = true
@@ -38,9 +41,10 @@ class ViewController: UIViewController {
 
                 switch result {
                     case .success(let hotelDescriptions):
-                        let hotelsVC = self?.storyboard?.instantiateViewController(withIdentifier: "HotelsViewController") as! HotelsViewController
+                        let hotelsVC = self?.storyboard?.instantiateViewController(withIdentifier: "HotelsListViewController") as! HotelsListViewController
                         hotelsVC.hotelDescriptionsWithSorting = hotelDescriptions
                         hotelsVC.unsortedDescriptions = hotelDescriptions
+                        hotelsVC.networkManager = self?.networkManager
                         self?.navigationController?.pushViewController(hotelsVC, animated: true)
                     case .failure(_):
                         sender.isHidden = false

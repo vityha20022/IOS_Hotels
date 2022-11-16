@@ -8,10 +8,10 @@
 import UIKit
 
 
-class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HotelsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     
-    let networkManager = NetworkManager()
+    var networkManager: NetworkManager!
     var hotelDescriptionsWithSorting: [HotelDescription]!
     var unsortedDescriptions: [HotelDescription]!
     var imageByHotelInfoId = [Int?: UIImage]()
@@ -70,26 +70,13 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 })
             case .ByRooms:
                 hotelDescriptionsWithSorting = unsortedDescriptions.sorted(by: { first, second in
-                    getNumberAvailableRoomsFor(hotel: first) > getNumberAvailableRoomsFor(hotel: second)
+                    getNumberAvailableRoomsFor(suitesAvailability: first.suitesAvailability) > getNumberAvailableRoomsFor(suitesAvailability: second.suitesAvailability)
                 })
         }
         
         tableView.reloadData()
     }
     
-    func getNumberAvailableRoomsFor(hotel: HotelDescription) -> Int {
-        let suitesAvailability = hotel.suitesAvailability
-        return suitesAvailability.split(separator: ":").count
-    }
-    
-    func croppedImageBordersFor(image: UIImage, pixelsToCrop offset: Double) -> UIImage {
-        let cropRect = CGRect(x: offset, y: offset, width: image.size.width - offset - 2 * offset, height: image.size.height - 2 * offset)
-        let sourceCGImage = image.cgImage!
-        let croppedCGImage = sourceCGImage.cropping(to: cropRect)!
-        let croppedImage = UIImage(cgImage: croppedCGImage, scale: image.imageRendererFormat.scale, orientation: image.imageOrientation)
-        return croppedImage
-    }
-
     // MARK: - Table view data source
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -122,41 +109,47 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let hotelDescription = hotelDescriptionsWithSorting[indexPath.row]
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "hotelCell", for: indexPath) as! HotelTableViewCell
         
-        // set text values
-        cell.hotelNameLabel.text = hotelDescription.name
-        cell.hotelStarsLabel.text = String(hotelDescription.stars)
-        cell.hotelAddressLabel.text = hotelDescription.address
-        cell.hotelDistanceToCityCenterLabel.text = "\(hotelDescription.distance) meters to city center"
-        cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(hotel: hotelDescription)) available rooms now"
+        setTextValuesForCellByHotelDescription(cell: cell, description: hotelDescription)
+        setImageForCellByHotelDescription(cell: cell, description: hotelDescription)
         
-        // set image
-        guard let hotelInfo = hotelInfoByHotelDescriptionId[hotelDescription.id] else {
+        return cell
+    }
+    
+    func setTextValuesForCellByHotelDescription(cell: HotelTableViewCell, description: HotelDescription) {
+        cell.hotelNameLabel.text = description.name
+        cell.hotelStarsLabel.text = String(description.stars)
+        cell.hotelAddressLabel.text = description.address
+        cell.hotelDistanceToCityCenterLabel.text = "\(description.distance) meters to city center"
+        cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(suitesAvailability: description.suitesAvailability)) available rooms now"
+    }
+    
+    func setImageForCellByHotelDescription(cell: HotelTableViewCell, description: HotelDescription) {
+        guard let hotelInfo = hotelInfoByHotelDescriptionId[description.id] else {
+            cell.hotelImage.image = nil //set to nil to work correctly immediately after sorting
             cell.imageLoadingSpinner.startAnimating()
-            networkManager.obtainHotelInfoForDescriptionId(id: String(hotelDescription.id)) { [weak self] result in
+            
+            networkManager.obtainHotelInfoForDescriptionId(id: String(description.id)) { [weak self] result in
                 DispatchQueue.main.async {
                     switch result {
                         case.success(let info):
-                            self?.hotelInfoByHotelDescriptionId[hotelDescription.id] = info
-                            self?.setImageForCellByInfo(cell: cell, info: info)
+                            self?.hotelInfoByHotelDescriptionId[description.id] = info
+                            self?.setImageForCellByHotelInfo(cell: cell, info: info)
                         case.failure(_):
                             self?.setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: nil)
                     }
                 }
             }
             
-            return cell
+            return
         }
         
         let image = imageByHotelInfoId[hotelInfo.id]
         cell.hotelImage.image = image
-        
-        return cell
     }
     
-    func setImageForCellByInfo(cell: HotelTableViewCell, info: HotelInfo) {
+    func setImageForCellByHotelInfo(cell: HotelTableViewCell, info: HotelInfo) {
         guard let imagePath = info.image else {
             setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: info.id)
             return
@@ -175,8 +168,8 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             DispatchQueue.main.async {
                 switch result {
                     case.success(let image):
-                        let croppedImage = self?.croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
-                        self?.setAndCacheImageForCell(cell: cell, image: croppedImage!, hotelInfoId: info.id)
+                        let croppedImage = croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
+                        self?.setAndCacheImageForCell(cell: cell, image: croppedImage, hotelInfoId: info.id)
                     case.failure(_):
                         self?.setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: info.id)
                 }
@@ -189,7 +182,4 @@ class HotelsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cell.imageLoadingSpinner.stopAnimating()
         cell.hotelImage.image = image
     }
-
-        
-
 }
