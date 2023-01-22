@@ -14,7 +14,7 @@ struct HotelDescription: Codable {
     let stars: Double
     let distance: Double
     let suitesAvailability: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name

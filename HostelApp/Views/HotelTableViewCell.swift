@@ -16,7 +16,7 @@ class HotelTableViewCell: UITableViewCell {
     @IBOutlet weak var hotelImage: UIImageView!
     @IBOutlet weak var imageLoadingSpinner: UIActivityIndicatorView!
     @IBOutlet weak var hotelAvailableRoomsLabel: UILabel!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

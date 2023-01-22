@@ -16,7 +16,7 @@ struct HotelInfo: Codable {
     let suitesAvailability: String
     let lat: Double
     let lon: Double
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name

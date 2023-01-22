@@ -16,19 +16,19 @@ class HotelPageViewController: UIViewController {
     @IBOutlet weak var hotelLatLabel: UILabel!
     @IBOutlet weak var hotelLonLabel: UILabel!
     @IBOutlet weak var hotelStarsLabel: UILabel!
-    
+
     var hotelInfo: HotelInfo!
     var hotelImage: UIImage!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         if hotelImage.isSymbolImage {
             hotelImageOutlet.contentMode = .scaleAspectFit
         }
-        
+
         hotelImageOutlet.image = hotelImage
-        
+
         hotelNameLabel.text = hotelInfo.name
         hotelStarsLabel.text = String(hotelInfo.stars)
         hotelAddressLabel.text = hotelInfo.address
