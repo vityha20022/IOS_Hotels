@@ -33,7 +33,7 @@ class HotelPageViewController: UIViewController {
         hotelStarsLabel.text = String(hotelInfo.stars)
         hotelAddressLabel.text = hotelInfo.address
         hotelDistanceToCenterLabel.text = "\(hotelInfo.distance) meters to city center"
-        hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(suitesAvailability: hotelInfo.suitesAvailability)) available rooms now"
+        hotelAvailableRoomsLabel.text = "\(hotelInfo.suitesAvailability.getNumberAvailableRooms()) available rooms now"
         hotelLatLabel.text = String(hotelInfo.lat)
         hotelLonLabel.text = String(hotelInfo.lon)
     }

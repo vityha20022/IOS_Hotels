@@ -8,14 +8,18 @@
 import Foundation
 import UIKit
 
-func getNumberAvailableRoomsFor(suitesAvailability: String) -> Int {
-    return suitesAvailability.split(separator: ":").count
+extension String {
+    func getNumberAvailableRooms() -> Int {
+        return self.split(separator: ":").count
+    }
 }
 
-func croppedImageBordersFor(image: UIImage, pixelsToCrop offset: Double) -> UIImage {
-    let cropRect = CGRect(x: offset, y: offset, width: image.size.width - offset - 2 * offset, height: image.size.height - 2 * offset)
-    let sourceCGImage = image.cgImage!
-    let croppedCGImage = sourceCGImage.cropping(to: cropRect)!
-    let croppedImage = UIImage(cgImage: croppedCGImage, scale: image.imageRendererFormat.scale, orientation: image.imageOrientation)
-    return croppedImage
+extension UIImage {
+    func croppedImageBorders(pixelsToCrop offset: Double) -> UIImage {
+        let cropRect = CGRect(x: offset, y: offset, width: self.size.width - offset - 2 * offset, height: self.size.height - 2 * offset)
+        let sourceCGImage = self.cgImage!
+        let croppedCGImage = sourceCGImage.cropping(to: cropRect)!
+        let croppedImage = UIImage(cgImage: croppedCGImage, scale: self.imageRendererFormat.scale, orientation: self.imageOrientation)
+        return croppedImage
+    }
 }

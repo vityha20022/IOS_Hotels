@@ -72,8 +72,8 @@ class HotelsListViewController: UIViewController, UITableViewDelegate, UITableVi
             })
         case .ByRooms:
             hotelDescriptionsWithSorting = unsortedDescriptions.sorted(by: { first, second in
-                getNumberAvailableRoomsFor(suitesAvailability: first.suitesAvailability) >
-                getNumberAvailableRoomsFor(suitesAvailability: second.suitesAvailability)
+                first.suitesAvailability.getNumberAvailableRooms() >
+                second.suitesAvailability.getNumberAvailableRooms()
             })
         }
 
@@ -124,7 +124,7 @@ class HotelsListViewController: UIViewController, UITableViewDelegate, UITableVi
         cell.hotelStarsLabel.text = String(description.stars)
         cell.hotelAddressLabel.text = description.address
         cell.hotelDistanceToCityCenterLabel.text = "\(description.distance) meters to city center"
-        cell.hotelAvailableRoomsLabel.text = "\(getNumberAvailableRoomsFor(suitesAvailability: description.suitesAvailability)) available rooms now"
+        cell.hotelAvailableRoomsLabel.text = "\(description.suitesAvailability.getNumberAvailableRooms()) available rooms now"
     }
 
     func setImageForCellByHotelDescription(cell: HotelTableViewCell, description: HotelDescription) {
@@ -170,7 +170,7 @@ class HotelsListViewController: UIViewController, UITableViewDelegate, UITableVi
             DispatchQueue.main.async {
                 switch result {
                 case.success(let image):
-                    let croppedImage = croppedImageBordersFor(image: image, pixelsToCrop: 1.0)
+                    let croppedImage = image.croppedImageBorders(pixelsToCrop: 1.0)
                     self?.setAndCacheImageForCell(cell: cell, image: croppedImage, hotelInfoId: info.id)
                 case.failure:
                     self?.setAndCacheImageForCell(cell: cell, image: UIImage(systemName: "circle.slash")!, hotelInfoId: info.id)
