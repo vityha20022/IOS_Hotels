@@ -20,10 +20,6 @@ class HotelsTableViewController: UITableViewController {
     func setupNavigation() {
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "Hotels"
-        /*self.navigationItem.leftBarButtonItem = nil;
-        self.navigationItem.hidesBackButton = true;
-        self.navigationController?.navigationItem.backBarButtonItem?.isEnabled = false;
-        self.navigationController!.interactivePopGestureRecognizer!.isEnabled = false;*/
     }
 
     func getNumberAvailableRoomsFor(hotel: HotelDescription) -> Int {

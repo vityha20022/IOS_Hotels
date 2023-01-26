@@ -46,7 +46,7 @@ class StartScreenViewController: UIViewController {
                         hotelsVC.unsortedDescriptions = hotelDescriptions
                         hotelsVC.networkManager = self?.networkManager
                         self?.navigationController?.pushViewController(hotelsVC, animated: true)
-                case .failure:
+                case .failure(let error):
                     sender.isHidden = false
                     self?.errorLabel.isHidden = false
                     self?.tipLabel.isHidden = false
